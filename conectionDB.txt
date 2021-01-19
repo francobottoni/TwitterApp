@@ -1,0 +1,1 @@
+mongodb+srv://twitter:<password>@cluster0.jplgb.mongodb.net/<dbname>?retryWrites=true&w=majority
