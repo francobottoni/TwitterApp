@@ -13,15 +13,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	var t models.User
 	err := json.NewDecoder(r.Body).Decode(&t)
 	if err != nil {
-		http.Error(w, "Error in recibes values"+err.Error(), 400)
+		http.Error(w, "Error in recibes values", 400)
 		return
 	}
 
-	if len(t.Email) == 0 {
-		http.Error(w, "Email is required "+err.Error(), 400)
+	if t.Email == "" {
+		http.Error(w, "Email is required ", 400)
+		return
 	}
 	if len(t.Password) < 6 {
-		http.Error(w, "A password of at least 6 characters is required"+err.Error(), 400)
+		http.Error(w, "A password of at least 6 characters is required", 400)
 	}
 
 	_, found, _ := database.IfUserAlreadyExist(t.Email)
@@ -31,10 +32,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, status, err := database.InsertUser(t)
+	_, status, err, u := database.InsertUser(t)
 
 	if err != nil {
-		http.Error(w, "Error when insert a new user"+err.Error(), 400)
+		http.Error(w, "Error when insert a new user", 400)
 		return
 	}
 
@@ -43,5 +44,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	j, _ := json.Marshal(u)
 	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(j)
 }

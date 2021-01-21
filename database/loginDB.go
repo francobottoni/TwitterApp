@@ -9,7 +9,7 @@ import (
 )
 
 // Insert a new User in db
-func InsertUser(u models.User) (string, bool, error) {
+func InsertUser(u models.User) (string, bool, error, models.User) {
 
 	//Here set Timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -23,9 +23,9 @@ func InsertUser(u models.User) (string, bool, error) {
 	result, err := col.InsertOne(ctx, u)
 
 	if err != nil {
-		return "", false, err
+		return "", false, err, models.User{}
 	}
 
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
-	return ObjID.String(), true, nil
+	return ObjID.String(), true, nil, u
 }

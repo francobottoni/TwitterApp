@@ -13,7 +13,7 @@ func IfUserAlreadyExist(email string) (models.User, bool, string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
-	db := MongoConection.Database("Twittor")
+	db := MongoConection.Database("twittor")
 	col := db.Collection("users")
 
 	condition := bson.M{"email": email}
